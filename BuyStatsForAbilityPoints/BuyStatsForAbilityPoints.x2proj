@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Default" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Guid>6f976592-574c-47b1-8809-0ec1093d0358</Guid>
+    <Name>Buy stats for ability points</Name>
+    <Description>This mod adds a new UI to buy soldiers' stats with ability points. 
+It also disables the Covert Actions stat boosts and provides fixed income of
+ability points every month.</Description>
+    <SteamPublishID>0</SteamPublishID>
+    <AssemblyName>BuyStatsForAbilityPoints</AssemblyName>
+    <RootNamespace>BuyStatsForAbilityPoints</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Config\XComBuyStatsForAbilityPoints.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\XComEditor.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\XComEngine.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\XComGame.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Content\StatUpgradeUI_Library.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModPreview.jpg">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ReadMe.txt" />
+    <Content Include="Src\BuyStatsForAbilityPoints\Classes\BuyStatsPromotionScreenListener.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BuyStatsForAbilityPoints\Classes\BuyStatsUI.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BuyStatsForAbilityPoints\Classes\GeneralOptions.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BuyStatsForAbilityPoints\Classes\UIScreenListener_MonthlyAP.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BuyStatsForAbilityPoints\Classes\X2DownloadableContentInfo_BuyStatsForAbilityPoints.uc">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Config" />
+    <Folder Include="Content" />
+    <Folder Include="Src" />
+    <Folder Include="Src\BuyStatsForAbilityPoints" />
+    <Folder Include="Src\BuyStatsForAbilityPoints\Classes" />
+  </ItemGroup>
+  <Import Project="$(MSBuildLocalExtensionPath)\XCOM2.targets" />
+</Project>
