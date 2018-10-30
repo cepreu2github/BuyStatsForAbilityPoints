@@ -40,5 +40,11 @@ I used the following mods to learn how to make my work:
     [*]XCOM 2 RPG Overhaul by [b]Musashi[/b]
 [/list]
 
+[h1][b]CHANGELOG[/b][/h1]
+Version 2:
+[list]
+    [*]Fixed bug with spending soldier's APs
+[/list]
+
 [h1][b]WELCOME CONTRIBUTIONS[/b][/h1]
 https://github.com/cepreu2github/BuyStatsForAbilityPoints

@@ -327,8 +327,8 @@ simulated function AcceptSelectedPerk()
 	local XComGameStateHistory History;
 	local XComGameState UpdateState;
 	local XComGameStateContext_ChangeContainer ChangeContainer;
-	local XComGameState_Unit UpdatedUnit;
 	local int idx;
+	local int sharedCost;
 	local float newStatValue;
 
 	if(!CanAffordPerk())
@@ -342,62 +342,63 @@ simulated function AcceptSelectedPerk()
 	ChangeContainer = class'XComGameStateContext_ChangeContainer'.static
 		.CreateEmptyChangeContainer("Upgrade Stats in BuyStatUI");
 	UpdateState = History.CreateNewGameState(true, ChangeContainer);
-
-	UpdatedUnit = XComGameState_Unit(
+	Unit = XComGameState_Unit(
 		UpdateState.ModifyStateObject(class'XComGameState_Unit', Unit.ObjectID)
 	);
 
 	newStatValue = Unit.GetMaxStat(Stats[idx].Stat) + float(Stats[idx].Increment);
-
-	UpdatedUnit.SetBaseMaxStat(
+	Unit.SetBaseMaxStat(
 		Stats[idx].Stat, newStatValue, ECSMAR_None
 	);
-	UpdatedUnit.SetCurrentStat(
+	Unit.SetCurrentStat(
 		Stats[idx].Stat, newStatValue
 	);
+	sharedCost = PaySoldierAPs(iBuyAPCost);
 
 	`GAMERULES.SubmitGameState(UpdateState);
-
-	PayAPs(iBuyAPCost);
+	PaySharedAPs(sharedCost);
 
 	CloseScreen();
 }
 
-simulated function PayAPs(int AbilityPointCost)
+simulated function int PaySoldierAPs(int AbilityPointCost)
+{
+	local int sharedCost;
+	if (Unit.AbilityPoints >= AbilityPointCost)
+	{
+		// If the unit can afford the ability on their own, spend their AP
+		Unit.AbilityPoints -= AbilityPointCost;
+		Unit.SpentAbilityPoints += AbilityPointCost; // Save the amount of AP spent
+		sharedCost = 0;
+	}
+	else
+	{
+		sharedCost = AbilityPointCost - Unit.AbilityPoints;
+		Unit.SpentAbilityPoints += Unit.AbilityPoints;
+		Unit.AbilityPoints = 0; // The unit spent all of their remaining AP
+	}
+	return sharedCost;
+}
+
+simulated function PaySharedAPs(int AbilityPointCost)
 {
 	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameStateHistory History;
 	local XComGameState NewGameState;
 
 	History = `XCOMHISTORY;
-
 	NewGameState = class'XComGameStateContext_ChangeContainer'.static
 		.CreateChangeState("Upgrade Stats in BuyStatUI AP Costs");
-
 	// If the unit must pay an Ability Point cost to purchase this ability
 	XComHQ = XComGameState_HeadquartersXCom(
 		History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom')
 	);
-
-	if (Unit.AbilityPoints >= AbilityPointCost)
-	{
-		// If the unit can afford the ability on their own, spend their AP
-		Unit.AbilityPoints -= AbilityPointCost;
-		Unit.SpentAbilityPoints += AbilityPointCost; // Save the amount of AP spent
-	}
-	else if ((Unit.AbilityPoints + XComHQ.GetAbilityPoints()) >= AbilityPointCost)
-	{
-		// If the unit cannot afford ability on their own, spend all remaining AP 
-		// and draw the difference from the Shared AP pool
-		XComHQ = XComGameState_HeadquartersXCom(NewGameState.ModifyStateObject(
-			class'XComGameState_HeadquartersXCom', XComHQ.ObjectID
-		));
-		XComHQ.AddResource(
-			NewGameState, 'AbilityPoint', -(AbilityPointCost - Unit.AbilityPoints)
-		);
-		Unit.SpentAbilityPoints += Unit.AbilityPoints;
-		Unit.AbilityPoints = 0; // The unit spent all of their remaining AP
-	}
+	XComHQ = XComGameState_HeadquartersXCom(NewGameState.ModifyStateObject(
+		class'XComGameState_HeadquartersXCom', XComHQ.ObjectID
+	));
+	XComHQ.AddResource(
+		NewGameState, 'AbilityPoint', -AbilityPointCost
+	);
 	
 	`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
 }
