@@ -1,5 +1,3 @@
-﻿tags= war of the chosen, soldier stats, gameplay
-
 [h1][b]OVERVIEW[/b][/h1]
 This mod adds a new UI to buy soldiers' stats with ability points. 
 It also disables the Covert Actions stat boosts and provides fixed income of
@@ -41,3 +39,6 @@ I used the following mods to learn how to make my work:
     [*]I'm the Commander here by [b]Dare[/b]
     [*]XCOM 2 RPG Overhaul by [b]Musashi[/b]
 [/list]
+
+[h1][b]WELCOME CONTRIBUTIONS[/b][/h1]
+https://github.com/cepreu2github/BuyStatsForAbilityPoints
